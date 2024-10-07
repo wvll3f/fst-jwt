@@ -1,8 +1,9 @@
 import { prisma } from '../libs/prisma'
-import { User, UserCreate, UserRepository } from '../interfaces/user.interface';
+import { User, UserCreate, UserRepository, UserResponse, } from '../interfaces/user.interface';
 
-class UserRepositoryPrisma implements UserRepository {
-    async create(data: UserCreate): Promise<User> {
+class UserRepositoryImplts implements UserRepository {
+
+    async create(data: UserCreate): Promise<UserResponse> {
         const result = await prisma.user.create({
             data: {
                 email: data.email,
@@ -11,10 +12,10 @@ class UserRepositoryPrisma implements UserRepository {
                 role: data.role,
             },
         });
-        return result;
+        return result as UserResponse;
     }
 
-    async update(data: UserCreate): Promise<User> {
+    async update(data: UserCreate): Promise<UserResponse> {
         const result = await prisma.user.create({
             data: {
                 email: data.email,
@@ -22,30 +23,29 @@ class UserRepositoryPrisma implements UserRepository {
                 name: data.name,
             },
         });
-        return result;
+        return result as UserResponse;
     }
 
-
-    async findByEmail(email: string): Promise<User | null> {
-        const result = await prisma.user.findFirst({
+    async findByEmail(email: string): Promise<UserResponse | null> {
+        const result = await prisma.user.findUnique({
             where: {
                 email,
             },
         });
-
-        return result || null;
+        
+        return result as UserResponse || null;
     }
 
-    async deleteById(id: string): Promise<User | null> {
-        const result = await prisma.user.deleteById({
+    async deleteById(id: string): Promise<UserResponse | null> {
+        const result = await prisma.user.delete({
             where: {
                 id,
             },
         });
 
-        return result || null;
+        return result as UserResponse || null;
     }
 
 }
 
-export { UserRepositoryPrisma };
+export { UserRepositoryImplts };
