@@ -1,5 +1,6 @@
 import { prisma } from '../libs/prisma'
 import { User, UserCreate, UserRepository, UserResponse, } from '../interfaces/user.interface';
+import { error } from 'console';
 
 class UserRepositoryImplts implements UserRepository {
 
@@ -16,13 +17,19 @@ class UserRepositoryImplts implements UserRepository {
     }
 
     async update(data: UserCreate): Promise<UserResponse> {
-        const result = await prisma.user.create({
-            data: {
+
+        const result = await prisma.user.update({
+            where: {
                 email: data.email,
-                password: data.password,
+            },
+            data: {
                 name: data.name,
+                password: data.password,
+                role: data.role
             },
         });
+
+
         return result as UserResponse;
     }
 
@@ -32,7 +39,7 @@ class UserRepositoryImplts implements UserRepository {
                 email,
             },
         });
-        
+
         return result as UserResponse || null;
     }
 
