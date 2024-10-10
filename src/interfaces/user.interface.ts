@@ -19,8 +19,14 @@ export interface UserResponse {
 export interface UserCreate {
     email: string;
     password: string;
-    name: string;
-    role: Role;
+    name: string | null;
+    role: string;
+}
+export interface UserUpdate {
+    email?: string;
+    password?: string;
+    name?: string | null;
+    role?: string;
 }
 export interface UserSignIn {
     email: string;

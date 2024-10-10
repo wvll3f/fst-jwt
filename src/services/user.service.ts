@@ -1,4 +1,4 @@
-import { UserCreate, UserRepository, UserResponse } from '../interfaces/user.interface';
+import { UserCreate, UserRepository, UserResponse, UserUpdate } from '../interfaces/user.interface';
 import { hash } from '../libs/argon2';
 import argon2 from 'argon2'
 import { UserRepositoryImplts } from '../repositories/user.repository'
@@ -12,15 +12,15 @@ export class UserService {
     async create({ email, password, name, role }: UserCreate): Promise<UserResponse> {
 
         const isUser = await this.userRepository.findByEmail(email);
-        const hashpass = await argon2.hash(password) as string 
+        const hashpass = await argon2.hash(password) as string
         console.log(`hash pass: ${hashpass}`)
         if (isUser) {
             throw new Error('User already exists');
         }
-        
+
         let result: any;
 
-        if (email.length > 0 && password.length > 0 && name.length > 0) {
+        if (email.length > 0 && password.length > 0 && name!.length > 0) {
             result = await this.userRepository.create({
                 email,
                 password,
@@ -35,8 +35,8 @@ export class UserService {
         return result;
     }
 
-    async update({ email, password, name, role }: UserCreate): Promise<UserResponse> {
-        const isUser = await this.userRepository.findByEmail(email);
+    async update({ email, password, name, role }: UserUpdate): Promise<UserResponse> {
+        const isUser = await this.userRepository.findByEmail(email!);
 
         if (!isUser) {
             throw new Error('User not exists');
@@ -44,12 +44,12 @@ export class UserService {
 
         let result: any;
 
-        if (email.length > 0 && password.length > 0 && name.length > 0) {
+        if (email!.length > 0 && password!.length > 0 && name!.length > 0) {
             result = await this.userRepository.update({
-                email,
-                password: await hash(password) as string,
-                name,
-                role
+                email:email!,
+                password: await hash(password!) as string,
+                name:name!,
+                role:role!
             });
         } else {
             throw new Error('data incomplete');
@@ -59,5 +59,6 @@ export class UserService {
 
         return result;
     }
+
 }
 

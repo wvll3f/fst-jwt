@@ -1,6 +1,7 @@
 import { prisma } from '../libs/prisma'
 import { UserCreate, UserRepository, UserResponse} from '../interfaces/user.interface';
 import { hash } from '../libs/argon2';
+import { Role } from '@prisma/client';
 
 class UserRepositoryImplts implements UserRepository {
 
@@ -10,7 +11,7 @@ class UserRepositoryImplts implements UserRepository {
                 email: data.email,
                 password: await hash(data.password) as string,
                 name: data.name,
-                role: data.role,
+                role: data.role! as Role,
             },
         });
         return result as UserResponse;
@@ -25,7 +26,7 @@ class UserRepositoryImplts implements UserRepository {
             data: {
                 name: data.name,
                 password: await hash(data.password) as string,
-                role: data.role
+                role: data.role! as Role
             },
         });
 

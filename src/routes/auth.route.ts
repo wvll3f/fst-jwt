@@ -1,6 +1,7 @@
 import { AuthService } from './../services/auth.service';
 import { FastifyInstance } from 'fastify';
 import { UserSignIn } from '../interfaces/user.interface';
+import { ModifypasswordRequest } from '../interfaces/auth.interface';
 
 export async function authRoutes(fastify: FastifyInstance) {
 
@@ -18,6 +19,5 @@ export async function authRoutes(fastify: FastifyInstance) {
             reply.code(401).send(error);
         }
     });
-
 
 }

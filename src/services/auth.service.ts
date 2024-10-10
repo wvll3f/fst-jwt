@@ -1,16 +1,22 @@
-import { AuthRepository, ModifypasswordRequest, UserSignIn } from './../interfaces/auth.interface';
+import { AuthRepository, ModifypasswordRequest, TokenProps, UserSignIn } from './../interfaces/auth.interface';
 import { UserRepositoryImplts } from '../repositories/user.repository';
-import { UserRepository } from '../interfaces/user.interface';
+import { UserCreate, UserRepository } from '../interfaces/user.interface';
 import { User } from '@prisma/client';
 import { verify } from '../libs/argon2';
 import { sign } from '../libs/jwt';
+import { tokenSplit } from '../middleware/isAuthenticated'
+import { verify as jwtVerify } from "../libs/jwt"
+import { UserService } from './user.service';
+
 
 
 export class AuthService implements AuthRepository {
 
     private userRepository: UserRepository
+    private userService: UserService
     constructor() {
         this.userRepository = new UserRepositoryImplts();
+        this.userService = new UserService();
     }
 
     async signIn({ email, password }: UserSignIn): Promise<any> {
@@ -30,11 +36,14 @@ export class AuthService implements AuthRepository {
         return accessToken;
     }
 
-    async updateRole(): Promise<void> {
+    async modifyPassword({ token, password }: ModifypasswordRequest): Promise<void> {
+        const accessToken = await tokenSplit(token)
+        const validToken = await jwtVerify(accessToken) as TokenProps
 
+        const {email,name,role} = await this.userRepository.findById(validToken.id) as User
+        this.userService.update({email,password,name,role})
     }
-    async modifyPassword({ id, token, password }: ModifypasswordRequest): Promise<void> {
 
-    }
+    async updateRole(): Promise<void> { }
 
 }
