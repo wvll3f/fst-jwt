@@ -2,9 +2,8 @@ import { AuthRepository, ModifypasswordRequest, UserSignIn } from './../interfac
 import { UserRepositoryImplts } from '../repositories/user.repository';
 import { UserRepository } from '../interfaces/user.interface';
 import { User } from '@prisma/client';
-import { hash, verify } from '../libs/argon2';
+import { verify } from '../libs/argon2';
 import { sign } from '../libs/jwt';
-import argon2 from "argon2";
 
 
 export class AuthService implements AuthRepository {
@@ -18,14 +17,9 @@ export class AuthService implements AuthRepository {
 
         const isUser = await this.userRepository.findByEmail(email) as User
         const validPassword = await verify(isUser.password, password)
-        const isvalidPassword = await argon2.verify(isUser.password, password)
 
-        console.log('hash: ' + isUser.password)
-        console.log('user: ' + isUser.email)
-        console.log('pass: ' + password)
-        console.log('result: ' + isvalidPassword)
 
-        if (!isUser || !isvalidPassword) {
+        if (!isUser || !validPassword) {
             throw new Error('Incorrect credentials')
         }
 

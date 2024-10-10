@@ -11,7 +11,6 @@ export async function isAuthenticated(request, reply) {
     const accessToken = await tokenSplit(rawtoken)
 
     const payload = await verify(accessToken)
-    console.log(payload)
 
 
     if (!payload) {

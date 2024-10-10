@@ -2,15 +2,18 @@ import argon2 from "argon2";
 
 export async function verify(hash: string, password: string) {
     try {
-        return argon2.verify(hash, password)
+        const result = await argon2.verify(hash, password) 
+        return result
     } catch (err) {
-        console.log(err)
+        console.log('erro verify '+err)
     }
 }
 
 export async function hash(password: string) {
     try {
-        return (await argon2.hash(password))
+        const result = await argon2.hash(password)
+        console.log(result)
+        return result
     } catch (err) {
         console.log(err)
     }
