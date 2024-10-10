@@ -36,5 +36,6 @@ export interface UserRepository {
     create(data: UserCreate): Promise<UserResponse>;
     update(data: UserCreate): Promise<UserResponse>;
     findByEmail(email: string): Promise<UserResponse | null>;
+    findById(id: string): Promise<UserResponse | null>;
     deleteById(id: string): Promise<UserResponse | null>;
 }

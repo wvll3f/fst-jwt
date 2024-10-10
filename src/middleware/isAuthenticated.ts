@@ -6,7 +6,6 @@ export async function tokenSplit(rawtoken:string){
     return accessToken
 }
 
-
 export async function isAuthenticated(request, reply) {
     const rawtoken = request.headers?.authorization
     const accessToken = await tokenSplit(rawtoken)

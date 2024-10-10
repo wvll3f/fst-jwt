@@ -1,6 +1,6 @@
 import { prisma } from '../libs/prisma'
-import { User, UserCreate, UserRepository, UserResponse, } from '../interfaces/user.interface';
-import { error } from 'console';
+import { UserCreate, UserRepository, UserResponse} from '../interfaces/user.interface';
+import { hash } from '../libs/argon2';
 
 class UserRepositoryImplts implements UserRepository {
 
@@ -8,7 +8,7 @@ class UserRepositoryImplts implements UserRepository {
         const result = await prisma.user.create({
             data: {
                 email: data.email,
-                password: data.password,
+                password: await hash(data.password) as string,
                 name: data.name,
                 role: data.role,
             },
@@ -24,7 +24,7 @@ class UserRepositoryImplts implements UserRepository {
             },
             data: {
                 name: data.name,
-                password: data.password,
+                password: await hash(data.password) as string,
                 role: data.role
             },
         });
@@ -37,6 +37,15 @@ class UserRepositoryImplts implements UserRepository {
         const result = await prisma.user.findUnique({
             where: {
                 email,
+            },
+        });
+
+        return result as UserResponse || null;
+    }
+    async findById(id: string): Promise<UserResponse | null> {
+        const result = await prisma.user.findUnique({
+            where: {
+                id,
             },
         });
 

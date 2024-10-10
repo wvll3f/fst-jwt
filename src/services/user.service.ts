@@ -1,4 +1,5 @@
 import { UserCreate, UserRepository, UserResponse } from '../interfaces/user.interface';
+import { hash } from '../libs/argon2';
 import { UserRepositoryImplts } from '../repositories/user.repository'
 
 export class UserService {
@@ -18,7 +19,12 @@ export class UserService {
         let result: any;
 
         if (email.length > 0 && password.length > 0 && name.length > 0) {
-            result = await this.userRepository.create({ email, password, name, role });
+            result = await this.userRepository.create({
+                email,
+                password: await hash(password) as string,
+                name,
+                role
+            });
         } else {
             throw new Error('data incomplete');
         }
@@ -37,7 +43,12 @@ export class UserService {
         let result: any;
 
         if (email.length > 0 && password.length > 0 && name.length > 0) {
-            result = await this.userRepository.update({ email, password, name, role });
+            result = await this.userRepository.update({
+                email,
+                password: await hash(password) as string,
+                name,
+                role
+            });
         } else {
             throw new Error('data incomplete');
         }
