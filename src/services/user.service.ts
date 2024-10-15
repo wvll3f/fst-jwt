@@ -23,7 +23,7 @@ export class UserService {
         if (email.length > 0 && password.length > 0 && name!.length > 0) {
             result = await this.userRepository.create({
                 email,
-                password,
+                password:hashpass,
                 name,
                 role
             });
