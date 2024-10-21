@@ -54,9 +54,6 @@ export class UserService {
         } else {
             throw new Error('data incomplete');
         }
-
-
-
         return result;
     }
 

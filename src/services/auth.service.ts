@@ -10,7 +10,7 @@ import { UserService } from './user.service';
 
 export class AuthService implements AuthRepository {
 
-    private readonly userRepository: UserRepository
+    private readonly userRepository: UserRepositoryImplts
     private readonly userService: UserService
     constructor() {
         this.userRepository = new UserRepositoryImplts();
@@ -28,13 +28,15 @@ export class AuthService implements AuthRepository {
         }
 
         const accessToken = await sign({
-            id: isUser.id
+            id: isUser.id,
+            email: isUser.email
         })
 
         return accessToken;
     }
 
-    async modifyPassword({ token, password }: ModifypasswordRequest): Promise<void> {
+
+    async modifyPassword({ token, password }: ModifypasswordRequest): Promise<any> {
         const accessToken = await tokenSplit(token)
         const validToken = await jwtVerify(accessToken) as TokenProps
 
@@ -43,8 +45,9 @@ export class AuthService implements AuthRepository {
         if (!user) {
             throw new Error("user not found");
         }
-
-        this.userService.update({  })
+        
+       const result = await this.userRepository.updatePassword(validToken.id, password)
+       return result;
     }
 
     async updateRole(): Promise<void> { }

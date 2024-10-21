@@ -44,4 +44,5 @@ export interface UserRepository {
     findByEmail(email: string): Promise<UserResponse | null>;
     findById(id: string): Promise<UserResponse | null>;
     deleteById(id: string): Promise<UserResponse | null>;
+    updatePassword(email:string, password:string): Promise<UserResponse | null>;
 }

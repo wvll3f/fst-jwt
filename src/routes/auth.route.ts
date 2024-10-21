@@ -1,7 +1,6 @@
 import { AuthService } from './../services/auth.service';
 import { FastifyInstance } from 'fastify';
 import { UserSignIn } from '../interfaces/user.interface';
-import { ModifypasswordRequest } from '../interfaces/auth.interface';
 
 interface passwordModify {
     password: string
@@ -24,13 +23,12 @@ export async function authRoutes(fastify: FastifyInstance) {
         }
     });
 
-    fastify.post<{ Body: passwordModify }>('/forget-password', async (req, reply) => {
+    fastify.post<{ Body: passwordModify }>('/recorvery', async (req, reply) => {
         const password = req.body.password;
-        const token = (req.headers.authorization || '')
-
+        const token = (req.headers.authorization!)
         try {
             const result = await authService.modifyPassword({ token, password })
-            return reply.code(200).send('ok')
+            return reply.code(200).send(result)
         } catch (error) {
             reply.code(401).send(error);
         }

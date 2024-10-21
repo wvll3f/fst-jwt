@@ -7,9 +7,7 @@ import { authRoutes } from './routes/auth.route';
 const HOST = process.env.HOST
 const PORT = process.env.PORT
 
-const app: FastifyInstance = fastify({
-    logger: true
-});
+const app: FastifyInstance = fastify();
 
 app.register(userRoutes, {
     prefix: '/users',

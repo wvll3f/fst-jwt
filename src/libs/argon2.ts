@@ -12,7 +12,6 @@ export async function verify(hash: string, password: string) {
 export async function hash(password: string) {
     try {
         const result = await argon2.hash(password)
-        console.log(result)
         return result
     } catch (err) {
         console.log(err)
