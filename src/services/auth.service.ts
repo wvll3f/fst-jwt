@@ -52,13 +52,14 @@ export class AuthService implements AuthRepository {
             throw new Error("user not found");
         }
 
+        const validOldPassword = await verify(user.password, oldPassword)
+        console.log(validOldPassword)
+        if (!validOldPassword) {
+            throw new Error('Invalid old password.')
+        }
+
         try {
-
-            const validOldPassword = await verify(user.password, oldPassword)
-            if (!validOldPassword) throw new Error('Invalid password.');
-            
             return await this.userRepository.updatePassword(validToken.id, password)
-
         } catch (err) {
             console.log(err)
         }
