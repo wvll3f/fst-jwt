@@ -1,12 +1,18 @@
 import { AuthRepository, ModifypasswordRequest, TokenProps, UserSignIn } from './../interfaces/auth.interface';
 import { UserRepositoryImplts } from '../repositories/user.repository';
-import { UserRepository } from '../interfaces/user.interface';
 import { User } from '@prisma/client';
 import { verify } from '../libs/argon2';
 import { sign } from '../libs/jwt';
 import { tokenSplit } from '../middleware/isAuthenticated'
 import { verify as jwtVerify } from "../libs/jwt"
 import { UserService } from './user.service';
+
+export interface tokenPayload {
+    id: string;
+    email: string;
+    iat: number;
+    exp: number;
+}
 
 export class AuthService implements AuthRepository {
 
@@ -17,7 +23,7 @@ export class AuthService implements AuthRepository {
         this.userService = new UserService();
     }
 
-    async signIn({ email, password }: UserSignIn): Promise<any> {
+    async signIn({ email, password }: UserSignIn): Promise<string> {
 
         const isUser = await this.userRepository.findByEmail(email) as User
         const validPassword = await verify(isUser.password, password)
@@ -36,7 +42,7 @@ export class AuthService implements AuthRepository {
     }
 
 
-    async modifyPassword({ token, password }: ModifypasswordRequest): Promise<any> {
+    async modifyPassword({ token, password, oldPassword }: ModifypasswordRequest): Promise<any> {
         const accessToken = await tokenSplit(token)
         const validToken = await jwtVerify(accessToken) as TokenProps
 
@@ -45,9 +51,18 @@ export class AuthService implements AuthRepository {
         if (!user) {
             throw new Error("user not found");
         }
-        
-       const result = await this.userRepository.updatePassword(validToken.id, password)
-       return result;
+
+        try {
+
+            const validOldPassword = await verify(user.password, oldPassword)
+            if (!validOldPassword) throw new Error('Invalid password.');
+            
+            return await this.userRepository.updatePassword(validToken.id, password)
+
+        } catch (err) {
+            console.log(err)
+        }
+
     }
 
     async updateRole(): Promise<void> { }

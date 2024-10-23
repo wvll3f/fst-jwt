@@ -1,7 +1,8 @@
 import { prisma } from '../libs/prisma'
-import { UserCreate, UserRepository, UserResponse} from '../interfaces/user.interface';
+import { UserCreate, UserRepository, UserResponse } from '../interfaces/user.interface';
 import { Role } from '@prisma/client';
 import { hash } from 'argon2';
+import { error } from 'console';
 
 class UserRepositoryImplts implements UserRepository {
 
@@ -60,18 +61,32 @@ class UserRepositoryImplts implements UserRepository {
         return result as UserResponse || null;
     }
 
-    async updatePassword(password: string, id: string): Promise<UserResponse> {
-        const hashPassword = await hash(password) 
-        const result = await prisma.user.update({
-            where: {
-                id
-            },
-            data: {
-                password: hashPassword as string
-            },
-        });
-        console.log('>>>>>>> ', + result )
-        return result as UserResponse || null;
+    async updatePassword(id: string, password: string): Promise<any> {
+        const hashPassword = await hash(password)
+        try {
+            console.log(id)
+
+            const user = await prisma.user.findUnique({
+                where: { id }
+            })
+
+            if (!user) throw new Error('user not found')
+
+            const { email, name, active } = await prisma.user.update({
+                where: {
+                    id
+                },
+                data: {
+                    password: hashPassword as string
+                },
+            });
+
+            return { email, name, active };
+
+        } catch (err) {
+            console.log(err)
+            return (err)
+        }
     }
 }
 

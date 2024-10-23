@@ -5,6 +5,7 @@ export interface UserSignIn {
 export interface ModifypasswordRequest {
     token: string;
     password: string;
+    oldPassword:string;
 }
 export interface TokenProps {
     id:string;
