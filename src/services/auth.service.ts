@@ -53,7 +53,8 @@ export class AuthService implements AuthRepository {
         }
 
         const validOldPassword = await verify(user.password, oldPassword)
-        console.log(validOldPassword)
+
+
         if (!validOldPassword) {
             throw new Error('Invalid old password.')
         }

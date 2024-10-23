@@ -13,7 +13,6 @@ export class UserService {
 
         const isUser = await this.userRepository.findByEmail(email);
         const hashpass = await argon2.hash(password) as string
-        console.log(`hash pass: ${hashpass}`)
         if (isUser) {
             throw new Error('User already exists');
         }

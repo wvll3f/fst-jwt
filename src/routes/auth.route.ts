@@ -1,6 +1,7 @@
 import { AuthService } from './../services/auth.service';
 import { FastifyInstance } from 'fastify';
 import { UserSignIn } from '../interfaces/user.interface';
+import { isAuthenticated } from '../middleware/isAuthenticated';
 
 interface passwordModify {
     password: string
@@ -24,15 +25,18 @@ export async function authRoutes(fastify: FastifyInstance) {
         }
     });
 
-    fastify.post<{ Body: passwordModify }>('/recorvery', async (req, reply) => {
-        const {password, oldPassword} = req.body;
-        const token = (req.headers.authorization!)
-        try {
-            const result = await authService.modifyPassword( { token, password, oldPassword })
-            return reply.code(200).send(result)
-        } catch (error) {
-            reply.code(401).send(error);
-        }
+    fastify.post<{ Body: passwordModify }>('/recorvery', {
+        preHandler: isAuthenticated,
+        handler: async (req, reply) => {
+            const { password, oldPassword } = req.body;
+            const token = req.headers.authorization!;
+            try {
+                const result = await authService.modifyPassword({ token, password, oldPassword });
+                return reply.code(200).send(result);
+            } catch (error) {
+                reply.code(401).send(error);
+            }
+        },
     });
 
 
