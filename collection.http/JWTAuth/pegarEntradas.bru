@@ -1,0 +1,15 @@
+meta {
+  name: pegarEntradas
+  type: http
+  seq: 15
+}
+
+get {
+  url: http://localhost:8080/inflows
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

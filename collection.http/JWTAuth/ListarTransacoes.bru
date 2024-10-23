@@ -1,0 +1,20 @@
+meta {
+  name: ListarTransacoes
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://172.30.2.136:8080/trans
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+script:pre-request {
+  
+  
+}

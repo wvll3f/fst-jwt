@@ -1,0 +1,32 @@
+meta {
+  name: CriarTransacao
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://172.30.2.136:8080/trans
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+    {
+      "description": "Mix compras",
+      "price": 27.23,
+      "category": "Comida",
+      "type": "S",
+      "date": "2024-06-27",
+      "metodoPagamento": "Pix"
+      
+    }
+}
+
+script:pre-request {
+  
+  
+}

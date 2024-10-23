@@ -1,0 +1,23 @@
+meta {
+  name: Register
+  type: http
+  seq: 14
+}
+
+post {
+  url: http://172.30.2.136:8080/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name":"Tester",
+    "username":"tester",
+    "password":"123456"
+  }
+}
+
+vars:post-response {
+  accessToken: res.body.accessToken
+}

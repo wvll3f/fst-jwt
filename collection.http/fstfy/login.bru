@@ -1,0 +1,22 @@
+meta {
+  name: login
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3333/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "igor@any.com",
+    "password": "teste12356"
+  }
+}
+
+vars:post-response {
+  accessToken: res.body
+}

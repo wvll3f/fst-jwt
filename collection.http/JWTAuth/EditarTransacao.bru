@@ -1,0 +1,25 @@
+meta {
+  name: EditarTransacao
+  type: http
+  seq: 7
+}
+
+put {
+  url: http://localhost:8080/updatetrans/4
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "description":"lanche",
+    "price":15.00,
+    "category":"Comida",
+    "type":"S",
+    "metodoPagamento":"Debito"
+  }
+}

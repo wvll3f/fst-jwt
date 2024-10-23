@@ -1,0 +1,15 @@
+meta {
+  name: MetodoPagamentoPorNome
+  type: http
+  seq: 15
+}
+
+get {
+  url: http://localhost:8080/metodos/Comida
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

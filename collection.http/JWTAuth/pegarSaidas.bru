@@ -1,0 +1,15 @@
+meta {
+  name: pegarSaidas
+  type: http
+  seq: 16
+}
+
+get {
+  url: http://localhost:8080/outflows
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
