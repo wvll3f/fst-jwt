@@ -9,20 +9,21 @@ export class UserService {
         this.userRepository = new UserRepositoryImplts();
     }
 
-    async create({ email, password, name, role }: UserCreate): Promise<UserResponse> {
+    async create({ email, password, name, role }: UserCreate): Promise<any> {
 
         const isUser = await this.userRepository.findByEmail(email);
-        const hashpass = await argon2.hash(password) as string
+        const hashpass = await argon2.hash(password)
+
+        console.log(hashpass)
+
         if (isUser) {
             throw new Error('User already exists');
         }
 
-        let result: any;
-
         if (email.length > 0 && password.length > 0 && name!.length > 0) {
-            result = await this.userRepository.create({
+            const result = await this.userRepository.create({
                 email,
-                password:hashpass,
+                password: hashpass,
                 name,
                 role
             });
@@ -30,8 +31,7 @@ export class UserService {
             throw new Error('data incomplete');
         }
 
-
-        return result;
+        return { email, name, role };
     }
 
     async update({ email, password, name, role }: UserUpdate): Promise<UserResponse> {
@@ -45,10 +45,10 @@ export class UserService {
 
         if (email!.length > 0 && password!.length > 0 && name!.length > 0) {
             result = await this.userRepository.update({
-                email:email!,
+                email: email!,
                 password: await hash(password!) as string,
-                name:name!,
-                role:role!
+                name: name!,
+                role: role!
             });
         } else {
             throw new Error('data incomplete');

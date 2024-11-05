@@ -10,7 +10,7 @@ class UserRepositoryImplts implements UserRepository {
         const result = await prisma.user.create({
             data: {
                 email: data.email,
-                password: await hash(data.password) as string,
+                password: data.password,
                 name: data.name,
                 role: data.role! as Role,
             },

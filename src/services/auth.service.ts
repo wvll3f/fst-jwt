@@ -30,6 +30,8 @@ export class AuthService implements AuthRepository {
         const isUser = await this.userRepository.findByEmail(email) as User;
         const validPassword = await verify(isUser.password, password);
 
+        console.log(validPassword)
+
         if (!isUser || !validPassword) {
             throw new Error('Incorrect credentials');
         };

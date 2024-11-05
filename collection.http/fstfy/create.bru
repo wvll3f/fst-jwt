@@ -1,0 +1,24 @@
+meta {
+  name: create
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:3333/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name":"mateus4",
+    "email":"mateus5@any.com",
+    "password":"jojojo",
+    "role":"BASIC"
+  }
+}
+
+vars:post-response {
+  accessToken: res.body
+}
