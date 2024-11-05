@@ -23,6 +23,7 @@ export async function authRoutes(fastify: FastifyInstance) {
         } catch (error) {
             reply.code(401).send(error);
         }
+      
     });
 
     fastify.post<{ Body: passwordModify }>('/recorvery', {

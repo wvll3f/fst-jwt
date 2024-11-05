@@ -60,7 +60,6 @@ class UserRepositoryImplts implements UserRepository {
 
         return result as UserResponse || null;
     }
-
     async updatePassword(id: string, password: string): Promise<any> {
         const hashPassword = await hash(password)
         try {
