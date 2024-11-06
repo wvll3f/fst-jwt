@@ -4,21 +4,38 @@ import fastify, { FastifyInstance } from "fastify"
 import { userRoutes } from './routes/user.route';
 import { authRoutes } from './routes/auth.route';
 
-const HOST = process.env.HOST
-const PORT = process.env.PORT
+class app {
+  private app: FastifyInstance;
+  private HOST:string; 
+  private PORT:string; 
 
-const app: FastifyInstance = fastify();
+  constructor() {
+    this.HOST = process.env.HOST!
+    this.PORT = process.env.PORT!
+    this.app = fastify();
+  }
 
-app.register(userRoutes, {
-    prefix: '/users',
-  });
-app.register(authRoutes, {
-    prefix: '/auth',
-  });
+  listen() {
+    this.app.listen({
+      host: this.HOST,
+      port: Number(this.PORT)
+    }).then(() => {
+      console.log('server running em http://localhost:3333 🚀🚀🚀')
+    })
+  }
 
-app.listen({
-    host: HOST,
-    port: Number(PORT)
-}).then(() => {
-    console.log('server running em http://localhost:3333 🚀🚀🚀')
-})
+  register(route: any, prefix: string) {
+    this.app.register(route, {
+      prefix: prefix,
+    });
+  }
+
+}
+
+const server = new app();
+
+server.listen()
+server.register(userRoutes, 'users')
+server.register(authRoutes, 'auth')
+
+
