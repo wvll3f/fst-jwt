@@ -1,6 +1,9 @@
 import { FastifyInstance } from 'fastify';
 import { UserCreate } from '../interfaces/user.interface';
 import { UserService } from '../services/user.service';
+interface IbodyFind {
+    id: string;
+}
 
 export async function userRoutes(fastify: FastifyInstance) {
 
@@ -35,5 +38,16 @@ export async function userRoutes(fastify: FastifyInstance) {
             reply.send(error);
         }
     });
+
+    fastify.delete<{ Body: IbodyFind }>('/delete', async (req, reply) => {
+        const id = req.body.id as string;
+        try {
+            const data = await userService.deleteById(id);
+            return reply.send(data);
+        } catch (error) {
+            reply.send(error);
+        }
+    });
+
 
 }

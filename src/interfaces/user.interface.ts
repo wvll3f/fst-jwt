@@ -3,7 +3,7 @@ export interface User {
     email: string;
     password: string;
     name: string | null;
-    role: Role;
+    role: string;
     active: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -43,6 +43,7 @@ export interface UserRepository {
     update(data: UserCreate): Promise<UserResponse>;
     findByEmail(email: string): Promise<UserResponse | null>;
     findById(id: string): Promise<UserResponse | null>;
-    deleteById(id: string): Promise<UserResponse | null>;
+    deleteById(id: string): Promise<void>;
     updatePassword(email:string, password:string): Promise<UserResponse | null>;
+    findAll(): Promise<User[]>;
 }

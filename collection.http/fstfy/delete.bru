@@ -1,0 +1,21 @@
+meta {
+  name: delete
+  type: http
+  seq: 5
+}
+
+delete {
+  url: http://localhost:3333/users/delete
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id":"cm35viphj0000u6siiuq4grxy"
+  }
+}
+
+vars:post-response {
+  accessToken: res.body
+}

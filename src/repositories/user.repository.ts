@@ -1,5 +1,5 @@
 import { prisma } from '../libs/prisma'
-import { UserCreate, UserRepository, UserResponse } from '../interfaces/user.interface';
+import { User, UserCreate, UserRepository, UserResponse } from '../interfaces/user.interface';
 import { Role } from '@prisma/client';
 import { hash } from 'argon2';
 import { error } from 'console';
@@ -51,14 +51,12 @@ class UserRepositoryImplts implements UserRepository {
 
         return result as UserResponse || null;
     }
-    async deleteById(id: string): Promise<UserResponse | null> {
+    async deleteById(id: string): Promise<void> {
         const result = await prisma.user.delete({
             where: {
                 id,
             },
         });
-
-        return result as UserResponse || null;
     }
     async updatePassword(id: string, password: string): Promise<any> {
         const hashPassword = await hash(password)
@@ -86,6 +84,10 @@ class UserRepositoryImplts implements UserRepository {
             console.log(err)
             return (err)
         }
+    }
+    async findAll(): Promise<User[]> {
+        const result = await prisma.user.findMany();
+        return result;
     }
 }
 
