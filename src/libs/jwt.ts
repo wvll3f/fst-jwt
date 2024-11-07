@@ -13,10 +13,20 @@ export async function verify(token: string) {
         return false
     }
 }
+export async function verifyRefreshToken(token: string) {
+    try {
+        return jwt.verify(token, JWT_REFRESH_SECRET)
+    } catch (err) {
+        console.log(err)
+        return false
+    }
+}
 
 export async function sign(payload) {
+    console.log(jwt.sign(payload, JWT_SECRET, {expiresIn:'1h'}))
     return jwt.sign(payload, JWT_SECRET, {expiresIn:'1h'})
 }
+
 export async function refreshSign(payload) {
     return jwt.sign(payload, JWT_REFRESH_SECRET, {expiresIn:'7d'})
 }

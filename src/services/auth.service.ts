@@ -1,9 +1,8 @@
-import { IrefreshToken } from './../repositories/refreshToken.repository';
 import { AuthRepository, ModifypasswordRequest, TokenProps, UserSignIn } from './../interfaces/auth.interface';
 import { UserRepositoryImplts } from '../repositories/user.repository';
 import { User } from '@prisma/client';
 import { verify } from '../libs/argon2';
-import { refreshSign, sign } from '../libs/jwt';
+import { refreshSign, sign, verifyRefreshToken } from '../libs/jwt';
 import { tokenSplit } from '../middleware/isAuthenticated'
 import { verify as jwtVerify } from "../libs/jwt"
 import { RefreshTokenRepositoryImplts } from '../repositories/refreshToken.repository';
@@ -83,6 +82,27 @@ export class AuthService implements AuthRepository {
 
     async updateRole(): Promise<void> { }
 
+    async validationRefreshToken(refreshToken: string){
+        const tokenData = await this.tokenRepository.findUnique(refreshToken);
+      
+        if (!tokenData || tokenData.expiresAt < new Date()) {
+          throw new Error('Refresh token inválido ou expirado');
+        }
+    }
+
+    async refreshAccessToken(refreshToken: string) {
+        const tokenData = await this.tokenRepository.findUnique(refreshToken);
+      
+        if (!tokenData || tokenData.expiresAt < new Date()) {
+          throw new Error('Refresh token inválido ou expirado');
+        }
+      
+        const payload = await verifyRefreshToken(refreshToken);
+        const newAccessToken = refreshSign({ id: payload.id, refreshToken: refreshToken });
+      
+        return { accessToken: newAccessToken };
+      }
+
     /* async refreshAccessToken(refreshToken: string):Promise<void> {
 
         const tokenData = await prisma.refreshToken.findUnique({ where: { token: refreshToken } });
@@ -95,7 +115,5 @@ export class AuthService implements AuthRepository {
         const newAccessToken = sign({ userId: payload.userId }, process.env.JWT_SECRET, { expiresIn: '15m' });
       
         return { accessToken: newAccessToken };
-      }
-        
-    } */
+      } */
 }
