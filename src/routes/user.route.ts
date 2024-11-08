@@ -1,4 +1,5 @@
 import { FastifyInstance } from 'fastify';
+import { isAuthenticated, admAuthenticated } from '../middleware/isAuthenticated'
 import { UserCreate } from '../interfaces/user.interface';
 import { UserService } from '../services/user.service';
 interface IbodyFind {
@@ -8,6 +9,7 @@ interface IbodyFind {
 export async function userRoutes(fastify: FastifyInstance) {
 
     const userService = new UserService();
+
 
     fastify.post<{ Body: UserCreate }>('/', async (req, reply) => {
         const { name, email, password, role } = req.body;
@@ -48,6 +50,11 @@ export async function userRoutes(fastify: FastifyInstance) {
             reply.send(error);
         }
     });
+
+    fastify.get('/list', { preHandler: admAuthenticated }, async (req, reply) => {
+        const result = await userService.findAll()
+        reply.code(200).send(result)
+    })
 
 
 }

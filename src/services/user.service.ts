@@ -33,7 +33,6 @@ export class UserService {
         }
 
     }
-
     async update({ email, password, name, role }: UserUpdate): Promise<UserResponse> {
         const isUser = await this.userRepository.findByEmail(email!);
 
@@ -63,6 +62,7 @@ export class UserService {
     async findbyId(id: string) {
         const user = await this.userRepository.findById(id);
         if (!user) throw new Error('User not exists');
+        return user
     };
     async deleteById(id: string) {
         const user = await this.userRepository.findById(id)

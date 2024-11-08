@@ -12,11 +12,12 @@ post {
 
 body:json {
   {
-    "email":"mateus5@any.com",
+    "email":"wallef@gmail.com",
     "password":"jojojo"
   }
 }
 
 vars:post-response {
-  accessToken: res.body
+  token: res.body
+  refreshToken: res.body.refresh
 }

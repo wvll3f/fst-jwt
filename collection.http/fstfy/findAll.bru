@@ -1,0 +1,15 @@
+meta {
+  name: findAll
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:3333/users/list
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
