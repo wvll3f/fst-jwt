@@ -7,6 +7,9 @@ interface passwordModify {
     password: string
     oldPassword: string,
 }
+interface ITokenRefresh {
+    refreshToken:string
+}
 
 export async function authRoutes(fastify: FastifyInstance) {
 
@@ -40,5 +43,9 @@ export async function authRoutes(fastify: FastifyInstance) {
         },
     });
 
+    fastify.post<{Body:ITokenRefresh}>('/refresh', async (req, reply)=>{
+        const refresh = req.body.refreshToken;
+        authService.refreshAccessToken(refresh);
+    })
 
 }
