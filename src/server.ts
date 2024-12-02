@@ -1,27 +1,60 @@
 import 'dotenv/config'
 
+import { createServer, IncomingMessage, ServerResponse, Server } from 'http';
 import fastify, { FastifyInstance } from "fastify"
 import { userRoutes } from './routes/user.route';
 import { authRoutes } from './routes/auth.route';
+import { Server as ioServer, Socket } from 'socket.io'
 
 class app {
   private app: FastifyInstance;
-  private HOST:string; 
-  private PORT:string; 
+  private HOST: string;
+  private PORT: string;
+  private io: ioServer;
 
   constructor() {
     this.HOST = process.env.HOST!
     this.PORT = process.env.PORT!
-    this.app = fastify();
+
+    const serverFactory = (
+      handler: (req: IncomingMessage, res: ServerResponse) => void,
+      opts: any
+    ): Server => {
+      const server = createServer((req, res) => {
+        console.log(`Custom Log: ${req.method} ${req.url}`);
+        handler(req, res);
+      });
+
+      this.io = new ioServer(server, {
+        cors: {
+          origin: '*',
+          methods: ['GET', 'POST'],
+        },
+      });
+      this.setupSocketIO();
+      return server;
+    }
+
+    this.app = fastify({ serverFactory });
   }
 
-  listen() {
-    this.app.listen({
-      host: this.HOST,
-      port: Number(this.PORT)
-    }).then(() => {
-      console.log('server running em http://localhost:3333 🚀🚀🚀')
-    })
+  private setupSocketIO() {
+    if (!this.io) return;
+
+    this.io.on('connection', (socket: Socket) => {
+      console.log('New client connected:', socket.id);
+
+
+      socket.on('message', (data) => {
+        console.log(`Message from ${socket.id}:`, data);
+
+        socket.emit('response', { success: true, received: data });
+      });
+
+      socket.on('disconnect', (reason) => {
+        console.log(`Client disconnected: ${socket.id} (${reason})`);
+      });
+    });
   }
 
   register(route: any, prefix: string) {
@@ -30,11 +63,20 @@ class app {
     });
   }
 
+  start() {
+    this.app.listen({
+      host: this.HOST,
+      port: Number(this.PORT)
+    }).then(() => {
+      console.log('server running em http://localhost:3333 🚀🚀🚀')
+    })
+  }
+
 }
 
 const server = new app();
 
-server.listen()
+server.start()
 server.register(userRoutes, 'users')
 server.register(authRoutes, 'auth')
 
