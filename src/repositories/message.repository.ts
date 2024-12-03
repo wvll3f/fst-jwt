@@ -8,7 +8,6 @@ class MessageRepository {
 
         await prisma.message.create({
             data: {
-                id: data.id,
                 senderId: data.senderId,
                 receiverId: data.receiverId,
                 text: data.text,

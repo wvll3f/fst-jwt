@@ -6,11 +6,15 @@ import { userRoutes } from './routes/user.route';
 import { authRoutes } from './routes/auth.route';
 import { Server as ioServer, Socket } from 'socket.io'
 
+interface Isocket {
+  id: string;
+}
 class app {
   private app: FastifyInstance;
   private HOST: string;
   private PORT: string;
   private io: ioServer;
+  private userSocketMap = {};
 
   constructor() {
     this.HOST = process.env.HOST!
@@ -32,9 +36,9 @@ class app {
         },
       });
       this.setupSocketIO();
+      this.getOnlineUsers();
       return server;
     }
-
     this.app = fastify({ serverFactory });
   }
 
@@ -55,6 +59,26 @@ class app {
         console.log(`Client disconnected: ${socket.id} (${reason})`);
       });
     });
+  }
+
+  private getOnlineUsers() {
+
+    this.io.on("connection", (socket) => {
+      console.log("A user connected " + socket.id);
+
+      const userId = socket.handshake.query.userId as string;
+      if (userId) this.userSocketMap[userId] = socket.id;
+
+      this.io.emit("getOnlineUsers", Object.keys(this.userSocketMap));
+
+      socket.on("disconnect", () => {
+        console.log("A user disconnected", socket.id);
+        delete this.userSocketMap[userId];
+        this.io.emit("getOnlineUsers", Object.keys(this.userSocketMap));
+      });
+
+    });
+
   }
 
   register(route: any, prefix: string) {
