@@ -72,7 +72,15 @@ export class UserService {
 
         return (`Usuario ${user.email} deletado`)
     }
+
     async findAll(): Promise<User[]> {
+        const result = await this.userRepository.findAll()
+
+        if (!result || result.length < 1) throw new Error('Nenhum usuario foi encontrador')
+
+        return result
+    }
+    async getOthersUsers(): Promise<User[]> {
         const result = await this.userRepository.findAll()
 
         if (!result || result.length < 1) throw new Error('Nenhum usuario foi encontrador')

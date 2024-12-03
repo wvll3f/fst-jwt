@@ -23,7 +23,6 @@ export async function verifyRefreshToken(token: string) {
 }
 
 export async function sign(payload) {
-    console.log(jwt.sign(payload, JWT_SECRET, {expiresIn:'1h'}))
     return jwt.sign(payload, JWT_SECRET, {expiresIn:'1h'})
 }
 

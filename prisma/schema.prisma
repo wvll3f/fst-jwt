@@ -8,15 +8,17 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  role      Role     @default(BASIC)
-  active    Boolean  @default(true)
-  password  String
-  refreshTokens RefreshToken[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id             String         @id @default(cuid())
+  email          String         @unique
+  name           String?
+  role           Role           @default(BASIC)
+  active         Boolean        @default(true)
+  password       String
+  refreshTokens  RefreshToken[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @default(now())
+  messageRecived Message[]      @relation("ReceiverRelation") // Nome único para a relação
+  messageSender  Message[]      @relation("SenderRelation")   // Nome único para a relação
 }
 
 enum Role {
@@ -25,9 +27,22 @@ enum Role {
 }
 
 model RefreshToken {
-  id          Int      @id @default(autoincrement())
-  userId      String
-  token       String   @unique
-  expiresAt   DateTime
-  userAuth    User     @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  userAuth  User     @relation(fields: [userId], references: [id])
 }
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  senderId   String
+  receiverId String
+  sender     User     @relation("SenderRelation", fields: [senderId], references: [id]) 
+  receiver   User     @relation("ReceiverRelation", fields: [receiverId], references: [id]) 
+  text       String
+  image      String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+}
+

@@ -85,9 +85,21 @@ class UserRepositoryImplts implements UserRepository {
             return (err)
         }
     }
+
     async findAll(): Promise<User[]> {
         const result = await prisma.user.findMany();
         return result;
+    }
+
+    async getOthersUsers(userId: string) {
+        const result = prisma.user.findMany({
+            where: {
+                id: {
+                    not: userId
+                },
+            },
+        })
+        return result
     }
 }
 
