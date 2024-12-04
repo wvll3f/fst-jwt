@@ -13,6 +13,7 @@ export async function verify(token: string) {
         return false
     }
 }
+
 export async function verifyRefreshToken(token: string) {
     try {
         return jwt.verify(token, JWT_REFRESH_SECRET)

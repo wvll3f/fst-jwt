@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.7.4",
     "tsc": "^2.0.4",
     "tsx": "^4.19.1",

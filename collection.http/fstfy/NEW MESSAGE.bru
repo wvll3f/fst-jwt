@@ -1,0 +1,21 @@
+meta {
+  name: NEW MESSAGE
+  type: http
+  seq: 8
+}
+
+post {
+  url: http://localhost:3333/chat/new-message/cm34w5i540000rxc8cqftctl1
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtMzh2aW8zdTAwMDBjaW1lNDhtazB0enciLCJlbWFpbCI6IndhbGxlZkBnbWFpbC5jb20iLCJpYXQiOjE3MzMyNzAxMzAsImV4cCI6MTczMzI3MzczMH0.bW4BxfLplJpaPm6-8Y188K95oWl5mDac1K5CtejDHu8
+}
+
+body:json {
+  {
+    "text":"Olá amigo"
+  }
+}

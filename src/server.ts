@@ -5,10 +5,8 @@ import fastify, { FastifyInstance } from "fastify"
 import { userRoutes } from './routes/user.route';
 import { authRoutes } from './routes/auth.route';
 import { Server as ioServer, Socket } from 'socket.io'
+import { messageRoutes } from './routes/message.route';
 
-interface Isocket {
-  id: string;
-}
 class app {
   private app: FastifyInstance;
   private HOST: string;
@@ -60,7 +58,6 @@ class app {
       });
     });
   }
-
   private getOnlineUsers() {
 
     this.io.on("connection", (socket) => {
@@ -103,5 +100,6 @@ const server = new app();
 server.start()
 server.register(userRoutes, 'users')
 server.register(authRoutes, 'auth')
+server.register(messageRoutes, 'chat')
 
 

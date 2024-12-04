@@ -1,10 +1,10 @@
-import { IMessage } from "../interfaces/message.interface";
+import { IMessageRequest } from "../interfaces/message.interface";
 import { prisma } from '../libs/prisma';
 
 
 class MessageRepository {
 
-    async newMessage(data: IMessage) {
+    async newMessage(data: IMessageRequest) {
 
         await prisma.message.create({
             data: {
