@@ -6,6 +6,9 @@ import { userRoutes } from './routes/user.route';
 import { authRoutes } from './routes/auth.route';
 import { Server as ioServer, Socket } from 'socket.io'
 import { messageRoutes } from './routes/message.route';
+import fastifyCors from '@fastify/cors';
+import fastifyCookie from '@fastify/cookie';
+
 
 class app {
   private app: FastifyInstance;
@@ -15,8 +18,8 @@ class app {
   private userSocketMap = {};
 
   constructor() {
-    this.HOST = process.env.HOST!
-    this.PORT = process.env.PORT!
+    this.HOST = process.env.HOST || '127.0.0.1'
+    this.PORT = process.env.PORT || '3333'
 
     const serverFactory = (
       handler: (req: IncomingMessage, res: ServerResponse) => void,
@@ -38,6 +41,18 @@ class app {
       return server;
     }
     this.app = fastify({ serverFactory });
+    this.app.register(fastifyCors, {
+      origin: (origin, cb) => {
+        const allowedOrigins = ['http://localhost:3000'];
+        if (!origin || allowedOrigins.includes(origin)) {
+          cb(null, true);
+        } else {
+          cb(new Error('Not allowed by CORS'));
+        }
+      },
+      credentials: true, 
+    });
+
   }
 
   private setupSocketIO() {
@@ -58,7 +73,8 @@ class app {
       });
     });
   }
-  private getOnlineUsers() {
+
+  getOnlineUsers() {
 
     this.io.on("connection", (socket) => {
       console.log("A user connected " + socket.id);
@@ -76,6 +92,14 @@ class app {
 
     });
 
+  }
+
+  getReceiverSocketId(userId) {
+    return this.userSocketMap[userId];
+  }
+
+  getIO() {
+    return this.io;
   }
 
   register(route: any, prefix: string) {
@@ -101,5 +125,7 @@ server.start()
 server.register(userRoutes, 'users')
 server.register(authRoutes, 'auth')
 server.register(messageRoutes, 'chat')
+
+export { server }
 
 

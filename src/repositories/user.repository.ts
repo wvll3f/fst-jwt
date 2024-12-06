@@ -40,7 +40,7 @@ class UserRepositoryImplts implements UserRepository {
             },
         });
 
-        return result as UserResponse || null;
+        return result as UserResponse;
     }
     async findById(id: string): Promise<UserResponse | null> {
         const result = await prisma.user.findUnique({

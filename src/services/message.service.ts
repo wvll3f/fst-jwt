@@ -1,6 +1,7 @@
 import { IMessageRequest } from "../interfaces/message.interface";
 import { MessageRepository } from "../repositories/message.repository";
 import { UserService } from "./user.service";
+import { server as app } from "../server";
 
 export class MessageService {
 
@@ -51,6 +52,12 @@ export class MessageService {
 
         const result = this.messageRepository.newMessage(data)
 
+        const receiverSocketId = app.getReceiverSocketId(data.receiverId);
+        console.log(receiverSocketId)
+        if (receiverSocketId) {
+            const io = app.getIO()
+            io.to(receiverSocketId).emit("newMessage", result);
+        }
         return result;
     }
 

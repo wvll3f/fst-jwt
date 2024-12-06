@@ -5,6 +5,7 @@ import { UserRepositoryImplts } from '../repositories/user.repository'
 
 export class UserService {
     private userRepository: UserRepository
+   
     constructor() {
         this.userRepository = new UserRepositoryImplts();
     }

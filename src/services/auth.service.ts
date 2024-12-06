@@ -14,6 +14,11 @@ export interface tokenPayload {
     exp: number;
 }
 
+interface IResponseLogin {
+    accessToken:string,
+    refreshToken: string,
+}
+
 export class AuthService implements AuthRepository {
 
     private readonly userRepository: UserRepositoryImplts;
@@ -26,9 +31,13 @@ export class AuthService implements AuthRepository {
 
     }
 
-    async signIn({ email, password }: UserSignIn): Promise<Object> {
+    async signIn({ email, password }: UserSignIn): Promise<IResponseLogin> {
+        console.log( `${email} ESTOU AQUI  ${password}` )
 
         const isUser = await this.userRepository.findByEmail(email) as User;
+        
+        console.log(isUser)
+
         const validPassword = await verify(isUser.password, password);
 
         console.log(validPassword)
@@ -52,7 +61,6 @@ export class AuthService implements AuthRepository {
         }
 
         await this.tokenRepository.create(data)
-
         return {accessToken,refreshToken};
     }
 

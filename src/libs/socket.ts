@@ -1,75 +1,57 @@
-import fastify, { FastifyInstance } from "fastify";
-import { Server as ioServer, Socket } from 'socket.io'
-import { createServer, IncomingMessage, ServerResponse, Server } from 'http';
+import Fastify from "fastify";
+import { Server } from "socket.io";
+import http from "http";
 
+class SocketServer {
+  private userSocketMap: Record<string, string> = {};
+  private fastify;
+  private server;
+  private io;
 
-
-const serverFactory = (
-    handler: (req: IncomingMessage, res: ServerResponse) => void,
-    opts: any
-): Server => {
-    const server = createServer((req, res) => {
-        console.log(`Custom Log: ${req.method} ${req.url}`);
-        handler(req, res);
+  constructor() {
+    this.fastify = Fastify();
+    this.server = http.createServer(this.fastify.server);
+    this.io = new Server(this.server, {
+      cors: {
+        origin: ["http://localhost:5173"],
+      },
     });
+    this.initializeSocketEvents();
+  }
 
-    const io = new ioServer(server, {
-        cors: {
-            origin: '*',
-            methods: ['GET', 'POST'],
-        },
-    });
-    setupSocketIO();
-    getOnlineUsers();
-    return server;
-}
+  getReceiverSocketId(userId: string): string | undefined {
+    return this.userSocketMap[userId];
+  }
 
-
-export function setupSocketIO() {
-    if (!this.io) return;
-
-    this.io.on('connection', (socket: Socket) => {
-        console.log('New client connected:', socket.id);
-
-
-        socket.on('message', (data) => {
-            console.log(`Message from ${socket.id}:`, data);
-
-            socket.emit('response', { success: true, received: data });
-        });
-
-        socket.on('disconnect', (reason) => {
-            console.log(`Client disconnected: ${socket.id} (${reason})`);
-        });
-    });
-}
-
-export function getOnlineUsers() {
-
+  private initializeSocketEvents() {
     this.io.on("connection", (socket) => {
-        console.log("A user connected " + socket.id);
+      console.log("A user connected", socket.id);
 
-        const userId = socket.handshake.query.userId as string;
-        if (userId) this.userSocketMap[userId] = socket.id;
+      const userId = socket.handshake.query.userId as string;
+      if (userId) this.userSocketMap[userId] = socket.id;
 
+
+      this.io.emit("getOnlineUsers", Object.keys(this.userSocketMap));
+
+      socket.on("disconnect", () => {
+        console.log("A user disconnected", socket.id);
+        if (userId) delete this.userSocketMap[userId];
         this.io.emit("getOnlineUsers", Object.keys(this.userSocketMap));
-
-        socket.on("disconnect", () => {
-            console.log("A user disconnected", socket.id);
-            delete this.userSocketMap[userId];
-            this.io.emit("getOnlineUsers", Object.keys(this.userSocketMap));
-        });
-
+      });
     });
+  }
 
+  async start(port: number) {
+    try {
+      await this.fastify.listen({ port });
+      console.log(`Server running on http://localhost:${port}`);
+    } catch (err) {
+      console.error("Error starting server:", err);
+      process.exit(1);
+    }
+  }
 }
 
-export function getReceiverSocketId(userId) {
-    return userSocketMap[userId];
-}
-
-export const userSocketMap = {};
-
-const app: FastifyInstance = fastify({ serverFactory });
-
-export {app};
+const socketServer = new SocketServer();
+export { SocketServer, socketServer as default };
+socketServer.start(3000);
