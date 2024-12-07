@@ -47,11 +47,12 @@ class app {
         if (!origin || allowedOrigins.includes(origin)) {
           cb(null, true);
         } else {
-          cb(new Error('Not allowed by CORS'));
+          cb(new Error('Not allowed by CORS'), false);
         }
       },
       credentials: true, 
     });
+    this.app.register(fastifyCookie)
 
   }
 

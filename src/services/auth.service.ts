@@ -5,7 +5,7 @@ import { verify } from '../libs/argon2';
 import { refreshSign, sign, verifyRefreshToken } from '../libs/jwt';
 import { tokenSplit } from '../middleware/isAuthenticated'
 import { verify as jwtVerify } from "../libs/jwt"
-import { RefreshTokenRepositoryImplts } from '../repositories/refreshToken.repository';
+import { IrefreshToken, RefreshTokenRepositoryImplts } from '../repositories/refreshToken.repository';
 
 export interface tokenPayload {
     id: string;
@@ -107,7 +107,7 @@ export class AuthService implements AuthRepository {
           throw new Error('Refresh token inválido ou expirado');
         }
       
-        const payload = await verifyRefreshToken(refreshToken);
+        const payload = await verifyRefreshToken(refreshToken) as IrefreshToken;
         const newAccessToken = refreshSign({ id: payload.id, refreshToken: refreshToken });
       
         return { accessToken: newAccessToken };

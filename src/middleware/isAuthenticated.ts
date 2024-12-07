@@ -13,6 +13,7 @@ export async function tokenSplit(rawtoken: string) {
 export async function isAuthenticated(req, reply) {
     const rawtoken = req.headers?.authorization
     const accessToken = await tokenSplit(rawtoken)
+    
 
     if (accessToken.includes('{{accessToken}}')) return reply.code(401).send({
         error: 'invalid token'
@@ -26,6 +27,7 @@ export async function isAuthenticated(req, reply) {
             error: 'invalid token'
         })
     }
+    console.log(payload)
 
     return payload.id;
 }

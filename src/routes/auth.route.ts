@@ -1,7 +1,7 @@
 import { AuthService } from './../services/auth.service';
 import { FastifyInstance } from 'fastify';
 import { UserSignIn } from '../interfaces/user.interface';
-import { isAuthenticated } from '../middleware/isAuthenticated';
+import { isAuthenticated, tokenSplit } from '../middleware/isAuthenticated';
 import { server as app } from "../server";
 
 interface passwordModify {
@@ -25,12 +25,12 @@ export async function authRoutes(fastify: FastifyInstance) {
                 password,
             });
 
-            reply.setCookie('jwt', data.accessToken, {
+            return reply.setCookie('jwt', data.accessToken, {
                 maxAge: 7 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
-            }).send({ message: 'Cookie jwt definido' })
+            }).send(data.accessToken)
             
-            return reply.code(200).send(data);
+
         } catch (error) {
             console.log(error)
             reply.code(401).send(error);
@@ -58,13 +58,10 @@ export async function authRoutes(fastify: FastifyInstance) {
     })
 
     fastify.get('/check', { preHandler: isAuthenticated }, async (req: any, reply) => {
-        const receiverSocketId = await app.getReceiverSocketId(req.userId);
-        console.log(receiverSocketId)
-        reply.status(200);
-    })
-
-
-
-
+        // const receiverSocketId = await app.getReceiverSocketId(req.userId);
+        // console.log(receiverSocketId)
+        const token = await tokenSplit(req.headers['authorization']);
+        reply.status(200).send(token);
+    });
 
 }

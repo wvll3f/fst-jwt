@@ -1,0 +1,15 @@
+meta {
+  name: CHECK OUT
+  type: http
+  seq: 10
+}
+
+get {
+  url: http://localhost:3333/auth/check
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtMzh2aW8zdTAwMDBjaW1lNDhtazB0enciLCJlbWFpbCI6IndhbGxlZkBnbWFpbC5jb20iLCJpYXQiOjE3MzM1Nzg4NDYsImV4cCI6MTczMzU4MjQ0Nn0._ENxLjAW5K13I5Q83ZK08FHDV8LMueb0tnCVeBbm3D8
+}
