@@ -58,8 +58,8 @@ export async function authRoutes(fastify: FastifyInstance) {
     })
 
     fastify.get('/check', { preHandler: isAuthenticated }, async (req: any, reply) => {
-        // const receiverSocketId = await app.getReceiverSocketId(req.userId);
-        // console.log(receiverSocketId)
+        const receiverSocketId = await app.getReceiverSocketId(req.userId);
+        console.log(receiverSocketId)
         const token = await tokenSplit(req.headers['authorization']);
         reply.status(200).send(token);
     });
