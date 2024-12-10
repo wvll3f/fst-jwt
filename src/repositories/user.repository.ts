@@ -47,6 +47,13 @@ class UserRepositoryImplts implements UserRepository {
             where: {
                 id,
             },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                role:true,
+                active:true,
+            },
         });
 
         return result as UserResponse || null;

@@ -1,0 +1,15 @@
+meta {
+  name: GET SIDEBAR USERS
+  type: http
+  seq: 11
+}
+
+get {
+  url: http://localhost:3333/auth/check
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtMzh2aW8zdTAwMDBjaW1lNDhtazB0enciLCJlbWFpbCI6IndhbGxlZkBnbWFpbC5jb20iLCJpYXQiOjE3MzM1ODcyMTMsImV4cCI6MTczMzU5MDgxM30._Hxr6u6jWoaOApNPCtTA2TT8LN3-X1BxGQDdfinGHwM
+}

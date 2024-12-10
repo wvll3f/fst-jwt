@@ -24,9 +24,9 @@ export async function verifyRefreshToken(token: string) {
 }
 
 export async function sign(payload) {
-    return jwt.sign(payload, JWT_SECRET, {expiresIn:'1h'})
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' })
 }
 
 export async function refreshSign(payload) {
-    return jwt.sign(payload, JWT_REFRESH_SECRET, {expiresIn:'7d'})
+    return jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: '7d' })
 }

@@ -4,7 +4,7 @@ import argon2 from 'argon2'
 import { UserRepositoryImplts } from '../repositories/user.repository'
 
 export class UserService {
-    private userRepository: UserRepository
+    private userRepository: UserRepositoryImplts
    
     constructor() {
         this.userRepository = new UserRepositoryImplts();
@@ -81,10 +81,10 @@ export class UserService {
 
         return result
     }
-    async getOthersUsers(): Promise<User[]> {
-        const result = await this.userRepository.findAll()
+    async getOthersUsers(id:string): Promise<User[]> {
+        const result = await this.userRepository.getOthersUsers(id)
 
-        if (!result || result.length < 1) throw new Error('Nenhum usuario foi encontrador')
+        if (!result) throw new Error('Nenhum usuario foi encontrador')
 
         return result
     }

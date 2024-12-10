@@ -18,7 +18,7 @@ export async function authRoutes(fastify: FastifyInstance) {
 
     fastify.post<{ Body: UserSignIn }>('/login', async (req, reply) => {
         const { email, password } = req.body;
-        
+
         try {
             const data = await authService.signIn({
                 email,
@@ -29,7 +29,7 @@ export async function authRoutes(fastify: FastifyInstance) {
                 maxAge: 7 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
             }).send(data.accessToken)
-            
+
 
         } catch (error) {
             console.log(error)
@@ -60,8 +60,15 @@ export async function authRoutes(fastify: FastifyInstance) {
     fastify.get('/check', { preHandler: isAuthenticated }, async (req: any, reply) => {
         const receiverSocketId = await app.getReceiverSocketId(req.userId);
         console.log(receiverSocketId)
-        const token = await tokenSplit(req.headers['authorization']);
-        reply.status(200).send(token);
+        try {
+            const token = await tokenSplit(req.headers['authorization']);
+            reply.status(200).send(token);
+        } catch (error) {
+            return reply.code(401).send({
+                error: 'invalid token'
+            })
+        }
+
     });
 
 }

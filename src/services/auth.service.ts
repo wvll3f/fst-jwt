@@ -32,15 +32,9 @@ export class AuthService implements AuthRepository {
     }
 
     async signIn({ email, password }: UserSignIn): Promise<IResponseLogin> {
-        console.log( `${email} ESTOU AQUI  ${password}` )
 
         const isUser = await this.userRepository.findByEmail(email) as User;
-        
-        console.log(isUser)
-
         const validPassword = await verify(isUser.password, password);
-
-        console.log(validPassword)
 
         if (!isUser || !validPassword) {
             throw new Error('Incorrect credentials');
@@ -55,8 +49,11 @@ export class AuthService implements AuthRepository {
             id: isUser.id,
         })
 
+
         const data = {
             id: isUser.id,
+            expiresIn:'',
+            accessToken:accessToken,
             refreshToken: refreshToken
         }
 
