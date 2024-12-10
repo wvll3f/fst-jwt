@@ -5,7 +5,7 @@ import { UserRepositoryImplts } from '../repositories/user.repository'
 
 export class UserService {
     private userRepository: UserRepositoryImplts
-   
+
     constructor() {
         this.userRepository = new UserRepositoryImplts();
     }
@@ -74,14 +74,14 @@ export class UserService {
         return (`Usuario ${user.email} deletado`)
     }
 
-    async findAll(): Promise<User[]> {
+    async findAll(): Promise<UserResponse[]> {
         const result = await this.userRepository.findAll()
 
         if (!result || result.length < 1) throw new Error('Nenhum usuario foi encontrador')
 
         return result
     }
-    async getOthersUsers(id:string): Promise<User[]> {
+    async getOthersUsers(id: string): Promise<UserResponse[]> {
         const result = await this.userRepository.getOthersUsers(id)
 
         if (!result) throw new Error('Nenhum usuario foi encontrador')

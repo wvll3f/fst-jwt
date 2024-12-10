@@ -51,8 +51,8 @@ class UserRepositoryImplts implements UserRepository {
                 id: true,
                 name: true,
                 email: true,
-                role:true,
-                active:true,
+                role: true,
+                active: true,
             },
         });
 
@@ -93,8 +93,16 @@ class UserRepositoryImplts implements UserRepository {
         }
     }
 
-    async findAll(): Promise<User[]> {
-        const result = await prisma.user.findMany();
+    async findAll(): Promise<UserResponse[]> {
+        const result = await prisma.user.findMany({
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+                active: true,
+            }
+        });
         return result;
     }
 
@@ -104,7 +112,13 @@ class UserRepositoryImplts implements UserRepository {
                 id: {
                     not: userId
                 },
-            },
+            }, select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+                active: true,
+            }
         })
         return result
     }

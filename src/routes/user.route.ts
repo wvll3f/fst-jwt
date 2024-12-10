@@ -1,10 +1,16 @@
 import { FastifyInstance } from 'fastify';
 import { isAuthenticated, admAuthenticated } from '../middleware/isAuthenticated'
-import { UserCreate } from '../interfaces/user.interface';
+import { UserCreate, UserResponse } from '../interfaces/user.interface';
 import { UserService } from '../services/user.service';
 interface IbodyFind {
     id: string;
 }
+
+declare module 'fastify' {
+    interface FastifyRequest {
+      user: UserResponse;
+    }
+  }
 
 export async function userRoutes(fastify: FastifyInstance) {
 
@@ -67,7 +73,6 @@ export async function userRoutes(fastify: FastifyInstance) {
         const userId = req.user.id
         try {
             const result = await userService.getOthersUsers(userId)
-            console.log(result)
             reply.code(200).send(result)
         } catch (error) {
             reply.code(404).send(error)
