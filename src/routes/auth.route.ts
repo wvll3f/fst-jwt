@@ -25,12 +25,12 @@ export async function authRoutes(fastify: FastifyInstance) {
                 password,
             });
 
-            return reply.setCookie('jwt', data.accessToken, {
+            reply.setCookie('jwt', data.accessToken, {
                 maxAge: 7 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
             }).send(data.accessToken)
 
-
+            return reply.code(200).send(data)
         } catch (error) {
             console.log(error)
             reply.code(401).send(error);

@@ -62,12 +62,12 @@ export async function userRoutes(fastify: FastifyInstance) {
         reply.code(200).send(result)
     })
 
-    fastify.get('/:email', async (req: any, reply) => {
-        const email = req.params.email;
-        console.log(`email aqui: ${email}`)
-        const result = await userService.findbyEmail(email)
-        reply.code(200).send(result)
-    })
+    // fastify.get('/:email', async (req: any, reply) => {
+    //     const email = req.params.email;
+    //     console.log(`email aqui: ${email}`)
+    //     const result = await userService.findbyEmail(email)
+    //     reply.code(200).send(result)
+    // })
 
     fastify.get('/sideuser', { preHandler: isAuthenticated }, async (req , reply) => {
         const userId = req.user.id

@@ -31,7 +31,7 @@ export class AuthService implements AuthRepository {
 
     }
 
-    async signIn({ email, password }: UserSignIn): Promise<IResponseLogin> {
+    async signIn({ email, password }: UserSignIn): Promise<any> {
 
         const isUser = await this.userRepository.findByEmail(email) as User;
         const validPassword = await verify(isUser.password, password);
@@ -51,14 +51,14 @@ export class AuthService implements AuthRepository {
 
 
         const data = {
-            id: isUser.id,
-            expiresIn:'',
+            userId: isUser.id,
+            expiresIn:'1h',
             accessToken:accessToken,
             refreshToken: refreshToken
         }
 
         await this.tokenRepository.create(data)
-        return {accessToken,refreshToken};
+        return data;
     }
 
     async modifyPassword({ token, password, oldPassword }: ModifypasswordRequest): Promise<any> {

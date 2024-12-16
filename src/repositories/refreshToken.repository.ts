@@ -8,7 +8,7 @@ export interface IrefreshToken {
 
 class RefreshTokenRepositoryImplts {
 
-  async create(data: IrefreshToken) {
+  async create(data: any) {
 
     await prisma.refreshToken.create({
       data: {
