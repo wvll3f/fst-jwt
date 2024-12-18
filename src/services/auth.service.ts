@@ -40,6 +40,8 @@ export class AuthService implements AuthRepository {
             throw new Error('Incorrect credentials');
         };
 
+        console.log(isUser.id)
+
         const accessToken = await sign({
             id: isUser.id,
             email: isUser.email
@@ -105,7 +107,7 @@ export class AuthService implements AuthRepository {
         }
       
         const payload = await verifyRefreshToken(refreshToken) as IrefreshToken;
-        const newAccessToken = refreshSign({ id: payload.id, refreshToken: refreshToken });
+        const newAccessToken = refreshSign({ id: payload.userId, refreshToken: refreshToken });
       
         return { accessToken: newAccessToken };
       }
