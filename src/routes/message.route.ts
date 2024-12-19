@@ -11,7 +11,7 @@ export async function messageRoutes(fastify: FastifyInstance) {
     fastify.post<{ Body: IMessageRequest }>('/new-message/:receiverId', { preHandler: isAuthenticated }, async (req:any, reply) => {
 
         const {text, image } = req.body;
-        const senderId = req.userId;
+        const senderId = req.user.id;
         const {receiverId} = req.params;
 
         console.log(`${text} ${image} ${senderId} ${receiverId}`)
@@ -33,7 +33,7 @@ export async function messageRoutes(fastify: FastifyInstance) {
     fastify.get('/:receiverid', { preHandler: isAuthenticated }, async (req: any, reply) => {
 
         const { receiverid } = req.params;
-        const senderId = req.userId;
+        const senderId = req.user.id;
 
         try {
             const result = await messageService.findChatMessages(senderId, receiverid)

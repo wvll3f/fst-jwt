@@ -11,7 +11,7 @@ class MessageRepository {
                 senderId: data.senderId,
                 receiverId: data.receiverId,
                 text: data.text,
-                image: data.image,
+                image: 'none',
             }
         });
     }
