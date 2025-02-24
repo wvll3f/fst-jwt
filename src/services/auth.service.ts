@@ -50,15 +50,13 @@ export class AuthService implements AuthRepository {
         const refreshToken = await refreshSign({
             id: isUser.id,
         })
-
-
+        
         const data = {
             userId: isUser.id,
             expiresIn:'1h',
             accessToken:accessToken,
             refreshToken: refreshToken
         }
-
         await this.tokenRepository.create(data)
         return data;
     }

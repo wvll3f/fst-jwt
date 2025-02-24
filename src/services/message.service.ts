@@ -53,12 +53,14 @@ export class MessageService {
         const result = this.messageRepository.newMessage(data)
 
         const receiverSocketId = app.getReceiverSocketId(data.receiverId);
-        console.log(receiverSocketId)
-        if (receiverSocketId) {
+
+        console.log(`esse é id de quem vai receber a menssagem ${data.receiverId}`)
+
+        if (data.receiverId) {
             const io = app.getIO()
-            io.to(receiverSocketId).emit("newMessage", result);
+            io.to(data.receiverId).emit("newMessage", result);
         }
-        return result;
+        return data;
     }
 
 }

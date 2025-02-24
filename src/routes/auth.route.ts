@@ -20,17 +20,18 @@ export async function authRoutes(fastify: FastifyInstance) {
         const { email, password } = req.body;
 
         try {
-            const data = await authService.signIn({
+            const result = await authService.signIn({
                 email,
                 password,
             });
 
-            reply.setCookie('jwt', data.accessToken, {
+            reply.setCookie('jwt', result.accessToken, {
                 maxAge: 7 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
-            }).send(data.accessToken)
+            }).send(result)
 
-            return reply.code(200).send(data)
+            return reply.code(200).send(result)
+
         } catch (error) {
             console.log(error)
             reply.code(401).send(error);

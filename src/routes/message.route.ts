@@ -8,22 +8,29 @@ export async function messageRoutes(fastify: FastifyInstance) {
 
     const messageService = new MessageService();
 
-    fastify.post<{ Body: IMessageRequest }>('/new-message/:receiverId', { preHandler: isAuthenticated }, async (req:any, reply) => {
+    fastify.post<{ Body: IMessageRequest }>('/new-message/:receiverId', { preHandler: isAuthenticated }, async (req: any, reply) => {
 
-        const {text, image } = req.body;
+        const { text, image } = req.body;
         const senderId = req.user.id;
-        const {receiverId} = req.params;
+        const { receiverId } = req.params;
 
-        console.log(`${text} ${image} ${senderId} ${receiverId}`)
+        console.log(`data: ${text} ${image} ${senderId} ${receiverId}`)
+
+        const data = {
+            senderId: senderId,
+            receiverId: receiverId,
+            text: text,
+            image: image
+        }
 
         try {
-            const data = await messageService.newMenssage({
+            const result = await messageService.newMenssage({
                 senderId,
                 receiverId,
                 text,
                 image
             });
-            return reply.code(200).send(data);
+            return reply.code(200).send(result);
         } catch (error) {
             reply.code(401).send(error);
         }

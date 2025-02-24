@@ -1,5 +1,3 @@
-import 'dotenv/config'
-
 import { createServer, IncomingMessage, ServerResponse, Server } from 'http';
 import fastify, { FastifyInstance } from "fastify"
 import { userRoutes } from './routes/user.route';
@@ -9,6 +7,7 @@ import { messageRoutes } from './routes/message.route';
 import fastifyCors from '@fastify/cors';
 import fastifyCookie from '@fastify/cookie';
 
+import 'dotenv/config'
 
 class app {
   private app: FastifyInstance;
@@ -40,6 +39,7 @@ class app {
       this.getOnlineUsers();
       return server;
     }
+
     this.app = fastify({ serverFactory });
     this.app.register(fastifyCors, {
       origin: (origin, cb) => {
@@ -50,7 +50,7 @@ class app {
           cb(new Error('Not allowed by CORS'), false);
         }
       },
-      credentials: true, 
+      credentials: true,
     });
     this.app.register(fastifyCookie)
 
@@ -82,7 +82,6 @@ class app {
 
       const userId = socket.handshake.query.all
       if (userId) this.userSocketMap[userId] = socket.id;
-      console.log(userId)
 
       this.io.emit("getOnlineUsers", Object.keys(this.userSocketMap));
 
@@ -104,7 +103,7 @@ class app {
     return this.io;
   }
 
-  register(route: any, prefix: string) {
+  registerRoute(route: any, prefix: string) {
     this.app.register(route, {
       prefix: prefix,
     });
@@ -116,6 +115,7 @@ class app {
       port: Number(this.PORT)
     }).then(() => {
       console.log('server running em http://localhost:3333 🚀🚀🚀')
+      this.getOnlineUsers()
     })
   }
 
@@ -124,9 +124,9 @@ class app {
 const server = new app();
 
 server.start()
-server.register(userRoutes, 'users')
-server.register(authRoutes, 'auth')
-server.register(messageRoutes, 'chat')
+server.registerRoute(userRoutes, 'users')
+server.registerRoute(authRoutes, 'auth')
+server.registerRoute(messageRoutes, 'chat')
 
 export { server }
 
