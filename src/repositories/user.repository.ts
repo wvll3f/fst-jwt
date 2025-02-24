@@ -68,8 +68,6 @@ class UserRepositoryImplts implements UserRepository {
     async updatePassword(id: string, password: string): Promise<any> {
         const hashPassword = await hash(password)
         try {
-            console.log(id)
-
             const user = await prisma.user.findUnique({
                 where: { id }
             })

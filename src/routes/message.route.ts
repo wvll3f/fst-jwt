@@ -14,15 +14,6 @@ export async function messageRoutes(fastify: FastifyInstance) {
         const senderId = req.user.id;
         const { receiverId } = req.params;
 
-        console.log(`data: ${text} ${image} ${senderId} ${receiverId}`)
-
-        const data = {
-            senderId: senderId,
-            receiverId: receiverId,
-            text: text,
-            image: image
-        }
-
         try {
             const result = await messageService.newMenssage({
                 senderId,

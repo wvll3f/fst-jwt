@@ -40,8 +40,6 @@ export class AuthService implements AuthRepository {
             throw new Error('Incorrect credentials');
         };
 
-        console.log(isUser.id)
-
         const accessToken = await sign({
             id: isUser.id,
             email: isUser.email

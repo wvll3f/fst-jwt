@@ -38,7 +38,6 @@ export class MessageService {
 
         const requiredFields = ['senderId', 'receiverId'];
         const missingFields = requiredFields.filter((field) => {
-            console.log(field)
             !data[field]
         });
 
@@ -50,17 +49,15 @@ export class MessageService {
             throw new Error(`Cannot send an empty message`);
         }
 
-        const result = this.messageRepository.newMessage(data)
+        const newMessage = this.messageRepository.newMessage(data)
 
         const receiverSocketId = app.getReceiverSocketId(data.receiverId);
 
-        console.log(`esse é id de quem vai receber a menssagem ${data.receiverId}`)
-
-        if (data.receiverId) {
+        if (receiverSocketId) {
             const io = app.getIO()
-            io.to(data.receiverId).emit("newMessage", result);
+            io.to(data.receiverId).emit("newMessage", newMessage);
         }
-        return data;
+        return newMessage;
     }
 
 }
