@@ -80,7 +80,7 @@ class app {
     this.io.on("connection", (socket) => {
       console.log("A user connected " + socket.id);
 
-      const userId = socket.handshake.query.all
+      const userId = socket.handshake.query.userId as string
       if (userId) this.userSocketMap[userId] = socket.id;
 
       this.io.emit("getOnlineUsers", Object.keys(this.userSocketMap));
