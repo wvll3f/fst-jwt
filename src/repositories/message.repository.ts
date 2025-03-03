@@ -6,7 +6,7 @@ class MessageRepository {
 
     async newMessage(data: IMessageRequest) {
 
-        await prisma.message.create({
+        const result = await prisma.message.create({
             data: {
                 senderId: data.senderId,
                 receiverId: data.receiverId,
@@ -14,6 +14,8 @@ class MessageRepository {
                 image: 'none',
             }
         });
+
+        return result
     }
 
     async findChatMessages(senderId: string, receiverId: string) {

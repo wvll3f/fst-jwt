@@ -49,13 +49,19 @@ export class MessageService {
             throw new Error(`Cannot send an empty message`);
         }
 
-        const newMessage = this.messageRepository.newMessage(data)
+        const newMessage = await this.messageRepository.newMessage(data)
 
         const receiverSocketId = app.getReceiverSocketId(data.receiverId);
 
+        console.log(`olhe eu aqui${receiverSocketId}`)
+
         if (receiverSocketId) {
             const io = app.getIO()
-            io.to(data.receiverId).emit("newMessage", newMessage);
+            try {
+                io.to(receiverSocketId).emit("newMessage", newMessage);
+            } catch (error) {
+                console.error
+            }
         }
         return newMessage;
     }
